@@ -15,23 +15,32 @@ class CubitCounterScreen extends StatelessWidget {
 class _CubitCounterView extends StatelessWidget {
   const _CubitCounterView();
 
+  void increaseCounterBy(BuildContext context, [int value = 1]){
+    context.read<CounterCubit>().increaseBy(value);
+  }
+    
   @override
   Widget build(BuildContext context) {
 
-    final cubitCounterState = context.watch<CounterCubit>().state;
-
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Cubit Counter: ${cubitCounterState.transactionCount}'),
+        appBar: AppBar(      
+          title: context.select((CounterCubit value){
+            return Text('Cubit Counter: ${value.state.transactionCount}');
+          }),          
           actions: [
             IconButton(
-                onPressed: () {}, icon: const Icon(Icons.refresh_rounded))
+              onPressed: () {
+                context.read<CounterCubit>().resetCounter();
+              }, 
+              icon: const Icon(Icons.refresh_rounded)
+            )
           ],
         ),
         body: Center(
           child: BlocBuilder<CounterCubit, CounterState>(
             // buildWhen: (previous, current) => previous.counter != current.counter,
             builder: (context, state) {
+              print('state changed');
               return Text('Counter Clicks: ${state.counter}');
             },
           ),
@@ -41,7 +50,7 @@ class _CubitCounterView extends StatelessWidget {
           children: [
             FloatingActionButton(
               heroTag: '3',
-              onPressed: () {},
+              onPressed: () => increaseCounterBy(context, 3),
               child: const Text('+3'),
             ),
             const SizedBox(
@@ -49,7 +58,7 @@ class _CubitCounterView extends StatelessWidget {
             ),
             FloatingActionButton(
               heroTag: '2',
-              onPressed: () {},
+              onPressed: () => increaseCounterBy(context, 2),
               child: const Text('+2'),
             ),
             const SizedBox(
@@ -57,7 +66,7 @@ class _CubitCounterView extends StatelessWidget {
             ),
             FloatingActionButton(
               heroTag: '1',
-              onPressed: () {},
+              onPressed: () => increaseCounterBy(context, 1),
               child: const Text('+1'),
             ),
           ],
