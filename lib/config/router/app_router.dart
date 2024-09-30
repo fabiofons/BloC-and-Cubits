@@ -1,8 +1,8 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:forms_app/presentation/screen/screens.dart';
 import 'package:go_router/go_router.dart';
+import 'package:forms_app/presentation/screen/screens.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -18,6 +18,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/bloc',
       builder: (BuildContext context, GoRouterState state) => const BlocCounterScreen()
+    ),
+    GoRoute(
+      path: '/new-user',
+      builder: (BuildContext context, GoRouterState state) => const RegisterScreen()
     ),
   ]
 );
