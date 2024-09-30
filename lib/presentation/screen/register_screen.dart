@@ -38,23 +38,66 @@ class _RegisterFormView extends StatelessWidget {
   }
 }
 
-class _RegisterForm extends StatelessWidget {
+class _RegisterForm extends StatefulWidget {
   const _RegisterForm();
+
+  @override
+  State<_RegisterForm> createState() => _RegisterFormState();
+}
+
+class _RegisterFormState extends State<_RegisterForm> {
+
+  final _formKey = GlobalKey<FormState>();
+  String usermane = '';
+  String email = '';
+  String password = '';
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: _formKey,
       child: Column(
         children: [
-          const CustomTextFormField(label: 'Username',),
+           CustomTextFormField(
+            label: 'Username',
+            onChanged: (value) => usermane = value,
+            validator: (value) {
+              if( value == null || value.isEmpty || value.trim().isEmpty ) return 'Required field';
+              if( value.length < 4 ) return 'Must be greater than 4 character';
+
+              return null;
+            },
+          ),
           const SizedBox(height: 10,),
-          const CustomTextFormField(label: 'Email',),
+
+          CustomTextFormField(
+            label: 'Email',
+            onChanged: (value) => email = value,
+            validator: (value) {
+              if( value == null || value.isEmpty || value.trim().isEmpty ) return 'Required field';
+
+              final emailRegExp = RegExp(
+                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+              );
+
+              if( !emailRegExp.hasMatch(value)) return 'Invalid email';
+              return null;
+            },
+          ),
           const SizedBox(height: 10),
-          const CustomTextFormField(label: 'Password', obscureText: true,),
+
+          CustomTextFormField(
+            label: 'Password', 
+            obscureText: true,
+            onChanged: (value) => password = value,
+          ),
           const SizedBox(height: 10),
 
           FilledButton.tonalIcon(
-            onPressed: () {},
+            onPressed: () {
+              final isValidForm = _formKey.currentState?.validate();
+              if( isValidForm! ) return print('$usermane, $email, $password');
+            },
             label: const Text('Create user'),
             icon: const Icon(Icons.save_outlined),
           )
