@@ -31,6 +31,12 @@ class HomeScreen extends StatelessWidget {
             trailing: const Icon(Icons.arrow_forward_ios_rounded),
             onTap: () => context.push('/new-user'),
           ),
+          ListTile(
+            title: const Text('New User Cubit'),
+            subtitle: const Text('Manipulating forms cubit state'),
+            trailing: const Icon(Icons.arrow_forward_ios_rounded),
+            onTap: () => context.push('/cubit-register'),
+          ),
         ],
       )
     );
