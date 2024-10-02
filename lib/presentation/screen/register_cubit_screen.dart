@@ -57,8 +57,7 @@ class _RegisterForm extends StatelessWidget {
         CustomTextFormField(
           label: 'User Name',
           onChanged: registerCubit.usernameChanged,
-          errorText:
-              username.isPure || username.isValid ? null : 'No user available',
+          errorText: username.errorMessage
         ),
         const SizedBox(
           height: 10,
@@ -85,9 +84,8 @@ class _RegisterForm extends StatelessWidget {
             label: 'Password',
             obscureText: true,
             onChanged: registerCubit.passwordChanged,
-            errorText: password.isPure || password.isValid
-                ? null
-                : 'password not valid'),
+            errorText: password.errorMessage
+        ),
         const SizedBox(height: 10),
         FilledButton.tonalIcon(
           onPressed: () {
