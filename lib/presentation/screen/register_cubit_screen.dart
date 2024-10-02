@@ -13,10 +13,7 @@ class RegisterCubitScreen extends StatelessWidget {
           title: const Text('New User Cubit'),
         ),
         body: BlocProvider(
-          create: ( _ ) => RegisterCubit(), 
-          child: const _RegisterFormView()
-        )
-    );
+            create: (_) => RegisterCubit(), child: const _RegisterFormView()));
   }
 }
 
@@ -44,85 +41,49 @@ class _RegisterFormView extends StatelessWidget {
   }
 }
 
-class _RegisterForm extends StatefulWidget {
+class _RegisterForm extends StatelessWidget {
   const _RegisterForm();
 
   @override
-  State<_RegisterForm> createState() => _RegisterFormState();
-}
-
-class _RegisterFormState extends State<_RegisterForm> {
-
-  final _formKey = GlobalKey<FormState>();
-
-  @override
   Widget build(BuildContext context) {
-
     final registerCubit = context.watch<RegisterCubit>();
 
+    final username = registerCubit.state.username;
+    final password = registerCubit.state.password;
+    final email = registerCubit.state.email;
+
     return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-           CustomTextFormField(
-            label: 'Username',
-            onChanged: ( value ){
-              registerCubit.usernameChanged(value);
-              _formKey.currentState!.validate();
-            },
-            validator: (value) {
-              if( value == null || value.isEmpty || value.trim().isEmpty ) return 'Required field';
-              if( value.length < 4 ) return 'Must be greater than 4 character';
-
-              return null;
-            },
-          ),
-          const SizedBox(height: 10,),
-
-          CustomTextFormField(
-            label: 'Email',
-            onChanged: ( value ){
-              registerCubit.emailChanged(value);
-              _formKey.currentState!.validate();
-            },
-            validator: (value) {
-              if( value == null || value.isEmpty || value.trim().isEmpty ) return 'Required field';
-
-              final emailRegExp = RegExp(
-                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-              );
-
-              if( !emailRegExp.hasMatch(value)) return 'Invalid email';
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-
-          CustomTextFormField(
-            label: 'Password', 
+        child: Column(
+      children: [
+        CustomTextFormField(
+          label: 'User Name',
+          onChanged: registerCubit.usernameChanged,
+          errorText: username.errorMessage
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        CustomTextFormField(
+          label: 'Email',
+          onChanged: registerCubit.emailChanged,
+          errorText: email.errorMessage,
+        ),
+        const SizedBox(height: 10),
+        CustomTextFormField(
+            label: 'Password',
             obscureText: true,
-            onChanged: ( value ){
-              registerCubit.passwordChanged(value);
-              _formKey.currentState!.validate();
-            },
-            validator: (value) {
-              if( value == null || value.isEmpty || value.trim().isEmpty ) return 'Required field';
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-
-          FilledButton.tonalIcon(
-            onPressed: () {
-              final isValidForm = _formKey.currentState!.validate();
-              if( !isValidForm ) return;
-
-              registerCubit.onSubmit();
-            },
-            label: const Text('Create user'),
-            icon: const Icon(Icons.save_outlined),
-          )
-        ],
+            onChanged: registerCubit.passwordChanged,
+            errorText: password.errorMessage
+        ),
+        const SizedBox(height: 10),
+        FilledButton.tonalIcon(
+          onPressed: () {
+            registerCubit.onSubmit();
+          },
+          label: const Text('Create user'),
+          icon: const Icon(Icons.save_outlined),
+        )
+      ],
     ));
   }
 }
