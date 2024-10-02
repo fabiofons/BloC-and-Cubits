@@ -15,7 +15,7 @@ class Password extends FormzInput <String, PasswordError> {
     if( isValid || isPure ) return null;
 
     if( displayError == PasswordError.empty ) return 'This field can´t be empty';
-    if( displayError == PasswordError.length ) return 'At least 4 charather';
+    if( displayError == PasswordError.length ) return 'At least 6 charather';
     return null;
   }
 
